@@ -2,7 +2,7 @@
 Summary: Kerberos authentication module for HTTP
 Name: mod_auth_kerb
 Version: 5.4
-Release: 13%{?dist}
+Release: 14%{?dist}
 License: BSD and MIT
 Group: System Environment/Daemons
 URL: http://modauthkerb.sourceforge.net/
@@ -64,6 +64,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/httpd/modules/*.so
 
 %changelog
+* Fri Dec 04 2015 Jan Kaluza <jkaluza@redhat.com> - 5.4-14
+- Fix principal creation in Constrained Delegation so the principal can
+  be defined in KrbServiceName rather than always computing the value.
+  (#1210184)
+
 * Thu Jun 26 2014 Joe Orton <jorton@redhat.com> - 5.4-13
 - s4u2proxy: fix handling of net-yet-valid tickets (Rob Crittenden, #1050015)
 
