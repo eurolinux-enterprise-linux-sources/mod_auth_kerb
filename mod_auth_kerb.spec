@@ -1,14 +1,18 @@
+
 Summary: Kerberos authentication module for HTTP
 Name: mod_auth_kerb
 Version: 5.4
-Release: 6%{?dist}.0.sl6
+Release: 9%{?dist}
 License: BSD and MIT
 Group: System Environment/Daemons
 URL: http://modauthkerb.sourceforge.net/
 Source0: http://downloads.sourceforge.net/modauthkerb/%{name}-%{version}.tar.gz
 Source1: auth_kerb.conf
+Source2: LICENSE.ASL
 Patch1: mod_auth_kerb-5.4-rcopshack.patch
 Patch2: mod_auth_kerb-5.4-fixes.patch
+Patch3: mod_auth_kerb-5.4-s4u2proxy.patch
+Patch4: mod_auth_kerb-5.4-delegation.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: httpd-devel, krb5-devel
 Requires: httpd-mmn = %(cat %{_includedir}/httpd/.mmn || echo missing)
@@ -23,9 +27,13 @@ authentication based on ticket exchanges.
 %setup -q -n %{name}-%{version}
 %patch1 -p1 -b .rcopshack
 %patch2 -p1 -b .fixes
+%patch3 -p1 -b .s4u2proxy
+%patch4 -p1 -b .delegation
+
+cp -p %{SOURCE2} .
 
 %build
-%configure --without-krb4 --with-krb5=/usr \
+%configure --without-krb4 --with-krb5=%{_prefix} \
         --with-apache=%{_prefix}
 make %{?_smp_mflags} 
 
@@ -43,14 +51,20 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc README LICENSE
+%doc README LICENSE*
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/auth_kerb.conf
 %{_libdir}/httpd/modules/*.so
 
 %changelog
-* Tue Nov 30 2010 C. Sieh <csieh@fnal.gov> - 5.4-6.0.sl6
-- Change "--with-krb5=/usr/kerberos" to "--with-krb5=/usr" because the krb
-- location changed on RHEL 6 
+* Tue Mar  6 2012 Joe Orton <jorton@redhat.com> - 5.4-9
+- preserve delegation across requests (#688210)
+
+* Fri Mar  2 2012 Joe Orton <jorton@redhat.com> - 5.4-8
+- updated s4u2proxy patch (Rob Crittenden, #767741)
+
+* Thu Feb 23 2012 Joe Orton <jorton@redhat.com> - 5.4-7
+- add s4u2proxy support (Rob Crittenden, #767741)
+- fix configure line (#661777)
 
 * Mon Mar 29 2010 Joe Orton <jorton@redhat.com> - 5.4-6
 - package LICENSE file
