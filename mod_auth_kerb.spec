@@ -2,7 +2,7 @@
 Summary: Kerberos authentication module for HTTP
 Name: mod_auth_kerb
 Version: 5.4
-Release: 9%{?dist}
+Release: 10%{?dist}
 License: BSD and MIT
 Group: System Environment/Daemons
 URL: http://modauthkerb.sourceforge.net/
@@ -13,6 +13,7 @@ Patch1: mod_auth_kerb-5.4-rcopshack.patch
 Patch2: mod_auth_kerb-5.4-fixes.patch
 Patch3: mod_auth_kerb-5.4-s4u2proxy.patch
 Patch4: mod_auth_kerb-5.4-delegation.patch
+Patch5: mod_auth_kerb-5.4-longuser.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: httpd-devel, krb5-devel
 Requires: httpd-mmn = %(cat %{_includedir}/httpd/.mmn || echo missing)
@@ -29,6 +30,7 @@ authentication based on ticket exchanges.
 %patch2 -p1 -b .fixes
 %patch3 -p1 -b .s4u2proxy
 %patch4 -p1 -b .delegation
+%patch5 -p1 -b .longuser
 
 cp -p %{SOURCE2} .
 
@@ -56,6 +58,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/httpd/modules/*.so
 
 %changelog
+* Mon May 13 2013 Joe Orton <jorton@redhat.com> - 5.4-10
+- don't truncate translated names with KrbLocalUserMapping (jkaluza, #867153)
+
 * Tue Mar  6 2012 Joe Orton <jorton@redhat.com> - 5.4-9
 - preserve delegation across requests (#688210)
 
