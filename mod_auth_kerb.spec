@@ -2,7 +2,7 @@
 Summary: Kerberos authentication module for HTTP
 Name: mod_auth_kerb
 Version: 5.4
-Release: 10%{?dist}
+Release: 13%{?dist}
 License: BSD and MIT
 Group: System Environment/Daemons
 URL: http://modauthkerb.sourceforge.net/
@@ -14,6 +14,9 @@ Patch2: mod_auth_kerb-5.4-fixes.patch
 Patch3: mod_auth_kerb-5.4-s4u2proxy.patch
 Patch4: mod_auth_kerb-5.4-delegation.patch
 Patch5: mod_auth_kerb-5.4-longuser.patch
+Patch6: mod_auth_kerb-5.4-expired-ticket.patch
+Patch7: mod_auth_kerb-5.4-docs.patch
+Patch8: mod_auth_kerb-5.4-notyet.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: httpd-devel, krb5-devel
 Requires: httpd-mmn = %(cat %{_includedir}/httpd/.mmn || echo missing)
@@ -31,6 +34,9 @@ authentication based on ticket exchanges.
 %patch3 -p1 -b .s4u2proxy
 %patch4 -p1 -b .delegation
 %patch5 -p1 -b .longuser
+%patch6 -p1 -b .expiredticket
+%patch7 -p1 -b .docs
+%patch8 -p1 -b .notyet
 
 cp -p %{SOURCE2} .
 
@@ -58,6 +64,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/httpd/modules/*.so
 
 %changelog
+* Thu Jun 26 2014 Joe Orton <jorton@redhat.com> - 5.4-13
+- s4u2proxy: fix handling of net-yet-valid tickets (Rob Crittenden, #1050015)
+
+* Wed Jun 18 2014 Joe Orton <jorton@redhat.com> - 5.4-12
+- document KrbLocalUserMapping in README (#970678)
+
+* Wed Mar 19 2014 Jan Kaluza <jkaluza@redhat.com> - 5.4-11
+- fix error 500 when authorizing with expired ticket (#981248)
+
 * Mon May 13 2013 Joe Orton <jorton@redhat.com> - 5.4-10
 - don't truncate translated names with KrbLocalUserMapping (jkaluza, #867153)
 
