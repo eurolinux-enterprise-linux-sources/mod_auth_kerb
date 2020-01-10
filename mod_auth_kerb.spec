@@ -8,7 +8,7 @@
 Summary: Kerberos authentication module for HTTP
 Name: mod_auth_kerb
 Version: 5.4
-Release: 25%{?dist}
+Release: 28%{?dist}
 # src/mod_auth_kerb.c is under 3-clause BSD, ASL 2.0 code is patched in (-s4u2proxy.patch)
 # src/mit-internals.h contains MIT-licensed code.
 License: BSD and MIT and ASL 2.0
@@ -90,6 +90,15 @@ cp -p %{SOURCE2} .
 %attr(0700,apache,apache) %dir /run/httpd/krbcache
 
 %changelog
+* Fri Jan 24 2014 Daniel Mach <dmach@redhat.com> - 5.4-28
+- Mass rebuild 2014-01-24
+
+* Mon Jan 13 2014 Joe Orton <jorton@redhat.com> - 5.4-27
+- rebuild for #1029360
+
+* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 5.4-26
+- Mass rebuild 2013-12-27
+
 * Thu Oct 03 2013 Jan Kaluza <jkaluza@redhat.com> - 5.4-25
 - don't fail with error 500 when ticket is expired and Authorization header is
   provided by client (#982521)
